@@ -1,11 +1,13 @@
 <script>
-import BarcodeDetector from "barcode-detector"
+import { BarcodeDetectorPolyfill } from '@undecaf/barcode-detector-polyfill'
 
 export default {
   beforeMount() {
-    // if (!('BarcodeDetector' in window)) {
-    window.BarcodeDetector = BarcodeDetector
-    // }
+    try {
+        window['BarcodeDetector'].getSupportedFormats()
+    } catch {
+        window['BarcodeDetector'] = BarcodeDetectorPolyfill
+    }
   },
 
   methods: {
@@ -19,7 +21,7 @@ export default {
           this.$emit("decode", content);
         }
       } catch (error) {
-        // fail silently
+        console.error("Decoding error")
       }
     }
   }
